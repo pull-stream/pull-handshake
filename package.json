@@ -1,7 +1,7 @@
 {
   "name": "pull-handshake",
   "description": "easily create a duplex protocol that starts with a handshake",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "homepage": "https://github.com/dominictarr/pull-handshake",
   "repository": {
     "type": "git",
