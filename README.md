@@ -17,13 +17,16 @@ The basic outline for the sort of protocol you can build with pull-handshake is 
 
 ``` js
 handshake(function (cb) {
-  //get your header
+  //callback with your metadata
+  getMyMetadata(cb)
 }, function (me, you) {
   //compare my header with your header and decide what to send.
-  //return a duplex pull-stream
+  var missing = findDifference(me, you)
+
+  //return a duplex pull-stream, that handles both reading and writing.
   return {
-    source: ...,
-    sink: ...
+    source: createReadStream(missing)
+    sink: createWriteStream()
   }
 })
 
