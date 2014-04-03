@@ -6,6 +6,9 @@ var tape = require('tape')
 
 // in the handshake each side sends a random number,
 // and then the side that sent the lowest number 
+
+//THIS TEST WAS ALSO PUBLISHED AS pull-2set-replicate ON NPM.
+
 var a = [1, 7, 3, 5, 2]
 
 function sendAll (set, done) {
@@ -16,7 +19,6 @@ function sendAll (set, done) {
     //if I picked the low number,
     //send my numbers first.
     var iSendFirst = me < you
-    console.log('RETURN', me, iSendFirst, you, set)
 
     return {
       source: 
@@ -25,7 +27,6 @@ function sendAll (set, done) {
         : later = pull.defer()
       ,
       sink: pull.collect(function (err, ary) {
-        console.log('collected', ary, set)
         var missing = []
         if(err) return done(err)
 
@@ -91,7 +92,6 @@ tape('simple protocol - recieves', function (t) {
   })
 
   pull(B.source, pull.collect(function (err, ary) {
-    console.log('RECIEVED B', ary)
     t.deepEqual(ary.slice(1), [1, 3, 5, 2], 'recieved from b')
 
     if(!--n) done()
