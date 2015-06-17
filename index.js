@@ -21,6 +21,7 @@ module.exports = function (_cb) {
     handshake: {
       read: reader.read,
       abort: function (err) {
+        writer.end(err)
         reader.abort(err, function (err) {
         })
         _cb(err)
