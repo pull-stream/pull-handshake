@@ -9,10 +9,15 @@
   },
   "dependencies": {
     "pull-stream": "~2.21.0",
-    "pull-delayed-sink": "~1.0.0"
+    "pull-delayed-sink": "~1.0.0",
+    "pull-reader": "~1.1.0",
+    "pull-defer": "~0.1.1",
+    "pull-pushable": "~1.1.4",
+    "pull-cat": "~1.1.7"
   },
   "devDependencies": {
-    "tape": "~2.12.2"
+    "tape": "~4.0.0",
+    "pull-pair": "~1.0.0"
   },
   "scripts": {
     "test": "set -e; for t in test/*.js; do node $t; done"
