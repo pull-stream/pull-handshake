@@ -6,8 +6,16 @@ var Writer = require('pull-pushable')
 var cat = require('pull-cat')
 var pair = require('pull-pair')
 
-module.exports = function (_cb) {
+function once (cb) {
+  var called = 0
+  return function (a, b, c) {
+    if(called++) return
+    cb(a, b, c)
+  }
+}
 
+module.exports = function (_cb) {
+  _cb = once(_cb)
   var reader = Reader()
   var writer = Writer(function (err) {
     if(err) _cb(err)
