@@ -8,11 +8,12 @@ var tape = require('tape')
 var handshake = require('../')
 
 function agreement (cb) {
-  var stream = handshake()
+  var stream = handshake(cb)
   var shake = stream.handshake
   shake.write(R)
   shake.read(32, function (err, data) {
-    assert.deepEqual(data, R)
+    if(!err)
+      assert.deepEqual(data, R)
     cb(null, shake.rest())
   })
 
@@ -49,5 +50,32 @@ tape('simple', function (t) {
   }
 
   pull(client, logger('A->B'), server, logger('A<-B'), client)
+
+})
+
+
+function abort (cb) {
+  var stream = handshake(cb)
+  var shake = stream.handshake
+  shake.read(16, function (err, data) {
+    shake.abort(new Error('intentional'))
+  })
+
+  return stream
+}
+
+
+tape('abort', function (t) {
+
+  var client = agreement(function (err, stream) {
+
+  })
+
+  var server = abort(function (err) {
+    t.ok(err)
+    t.end()
+  })
+
+  pull(client, server, client)
 
 })
