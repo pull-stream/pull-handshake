@@ -7,14 +7,18 @@ var tape = require('tape')
 
 var handshake = require('../')
 
-function agreement (cb) {
-  var stream = handshake(cb)
+function agreement (timeout, cb) {
+  if(!cb) cb = timeout, timeout = null
+
+  var stream = handshake({timeout: timeout || 100}, cb)
   var shake = stream.handshake
   shake.write(R)
   shake.read(32, function (err, data) {
-    if(!err)
+    if(err) cb(err)
+    else {
       assert.deepEqual(data, R)
-    cb(null, shake.rest())
+      cb(null, shake.rest())
+    }
   })
 
   return stream
@@ -55,7 +59,7 @@ tape('simple', function (t) {
 
 
 function abort (cb) {
-  var stream = handshake(cb)
+  var stream = handshake({timeout: 100}, cb)
   var shake = stream.handshake
   shake.read(16, function (err, data) {
     shake.abort(new Error('intentional'))
@@ -79,3 +83,37 @@ tape('abort', function (t) {
   pull(client, server, client)
 
 })
+
+function hang () {
+  var _cb
+  return function (abort, cb) {
+    if(abort) {
+      if(_cb) _cb(abort)
+      cb(abort)
+    }
+    else
+      _cb = cb
+
+  }
+}
+
+tape('timeout', function (t) {
+  var timeout = false
+  var client = agreement(200, function (err, stream) {
+    t.ok(timeout)
+    console.log(err)
+    t.ok(err)
+    t.end()
+  })
+
+  setTimeout(function () {
+    timeout = true
+  }, 100)
+
+  pull(
+    hang(),
+    client
+  )
+
+})
+
