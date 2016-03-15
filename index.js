@@ -19,8 +19,7 @@ function isFunction (f) {
 }
 
 module.exports = function (opts, _cb) {
-  if(isFunction(opts))
-    _cb = opts, opts = {}
+  if(isFunction(opts)) _cb = opts, opts = {}
   _cb = once(_cb)
   var reader = Reader(opts && opts.timeout || 5e3)
   var writer = Writer(function (err) {
@@ -53,3 +52,4 @@ module.exports = function (opts, _cb) {
     source: cat([writer, p.source])
   }
 }
+
