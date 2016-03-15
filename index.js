@@ -14,9 +14,15 @@ function once (cb) {
   }
 }
 
-module.exports = function (_cb) {
+function isFunction (f) {
+  return 'function' === typeof f
+}
+
+module.exports = function (opts, _cb) {
+  if(isFunction(opts))
+    _cb = opts, opts = {}
   _cb = once(_cb)
-  var reader = Reader()
+  var reader = Reader(opts && opts.timeout || 5e3)
   var writer = Writer(function (err) {
     if(err) _cb(err)
   })
