@@ -4,6 +4,7 @@ var R = new Buffer(crypto.randomBytes(16).toString('hex'), 'ascii')
 var pair = require('pull-pair')
 var assert = require('assert')
 var tape = require('tape')
+var Hang = require('pull-hang')
 
 var handshake = require('../')
 
@@ -84,19 +85,6 @@ tape('abort', function (t) {
 
 })
 
-function hang () {
-  var _cb
-  return function (abort, cb) {
-    if(abort) {
-      if(_cb) _cb(abort)
-      cb(abort)
-    }
-    else
-      _cb = cb
-
-  }
-}
-
 tape('timeout', function (t) {
   var timeout = false
   var client = agreement(200, function (err, stream) {
@@ -111,7 +99,7 @@ tape('timeout', function (t) {
   }, 100)
 
   pull(
-    hang(),
+    Hang(),
     client
   )
 
@@ -143,4 +131,5 @@ tape('timeout does not apply to the rest of the stream', function (t) {
     })
   )
 })
+
 
