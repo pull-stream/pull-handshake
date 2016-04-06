@@ -117,3 +117,30 @@ tape('timeout', function (t) {
 
 })
 
+tape('timeout does not apply to the rest of the stream', function (t) {
+  var reader = handshake({timeout: 100})
+  var once = false
+  pull(
+    function (abort, cb) {
+      if(once)
+        setTimeout(function () {
+          once = true
+          cb(null, new Buffer('hello world'))
+        }, 200)
+      else
+        cb(true)
+    },
+    reader
+  )
+
+  pull(
+    reader.handshake.rest(),
+    pull.collect(function (err, ary) {
+      console.log(err)
+      t.notOk(err)
+      t.deepEqual(ary, [])
+      t.end()
+    })
+  )
+})
+
