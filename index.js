@@ -1,7 +1,4 @@
-
 var Reader = require('pull-reader')
-var pull = require('pull-stream')
-var deferred = require('pull-defer')
 var Writer = require('pull-pushable')
 var cat = require('pull-cat')
 var pair = require('pull-pair')
@@ -25,8 +22,6 @@ module.exports = function (opts, _cb) {
   var writer = Writer(function (err) {
     if(err) _cb(err)
   })
-
-  var source = deferred.source()
 
   var p = pair()
 
@@ -52,4 +47,3 @@ module.exports = function (opts, _cb) {
     source: cat([writer, p.source])
   }
 }
-

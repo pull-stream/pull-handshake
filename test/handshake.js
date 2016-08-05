@@ -1,7 +1,6 @@
 var crypto = require('crypto')
 var pull = require('pull-stream')
 var R = new Buffer(crypto.randomBytes(16).toString('hex'), 'ascii')
-var pair = require('pull-pair')
 var assert = require('assert')
 var tape = require('tape')
 var Hang = require('pull-hang')
@@ -131,5 +130,3 @@ tape('timeout does not apply to the rest of the stream', function (t) {
     })
   )
 })
-
-
