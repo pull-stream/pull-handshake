@@ -17,7 +17,7 @@ function isFunction (f) {
 
 module.exports = function (opts, _cb) {
   if(isFunction(opts)) _cb = opts, opts = {}
-  _cb = once(_cb)
+  _cb = once(_cb || function noop () {})
   var reader = Reader(opts && opts.timeout || 5e3)
   var writer = Writer(function (err) {
     if(err) _cb(err)

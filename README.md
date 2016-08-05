@@ -1,36 +1,51 @@
 # pull-handshake
 
-create handshakes for binary protocols with pull streams.
+Create handshakes for binary protocols with pull streams.
 
-
-# example
-
+# Example
 
 ``` js
-var shake = handshake()
+var stream = handshake()
+var shake = stream.handshake
 
-//pull some amount of data out of the stream
+// Pull some amount of data out of the stream
 shake.read(32, function (err, data) {
 
-  //write a response...
+  // Write a response...
   shake.write(new Buffer('hello there'))
 
   shake.read(32, function (err, data) {
-    //get a confirmation,
-    //and then attach the application
+    // Get a confirmation,
+    // and then attach the application
     var stream = createApplicationStream()
+
     pull(stream, shake.rest(), stream)
-    //shake.rest() returns a duplex binary stream.
-
+    // shake.rest() returns a duplex binary stream.
   })
-
 })
 
 
-//shake is itself a duplex pull-stream.
+// shake is itself a duplex pull-stream.
 pull(shake, stream, shake)
-
 ```
+
+## API
+
+### `handshake([opts], [callback])`
+
+#### opts
+
+Type: `Object`<br>
+Default: `{timeout: 5e3}`
+
+The allowed duration for the handshake to take place.
+
+#### callback
+
+Type: `Function`<br>
+Default: `function noop () {}`
+
+This will be called when the handshake completes, or fails. In the case of failure it is called with an `error`.
 
 ## License
 
