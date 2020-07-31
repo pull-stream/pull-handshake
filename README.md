@@ -24,14 +24,13 @@ shake.read(32, function (err, data) {
   })
 })
 
-
-// shake is itself a duplex pull-stream.
-pull(shake, stream, shake)
+// 'stream' can now be plugged into the other end of the handshake
+pull(stream, someRemoteStream, stream)
 ```
 
 ## API
 
-### `handshake([opts], [callback])`
+### `const stream = handshake([opts], [callback])`
 
 #### opts
 
@@ -46,6 +45,16 @@ Type: `Function`<br>
 Default: `function noop () {}`
 
 This will be called when the handshake completes, or fails. In the case of failure it is called with an `error`.
+
+### `const shake = stream.handshake`
+
+A duplex pull-stream. Also exposes reader and writer functions:
+- `read(bytes, cb(err, buf))`
+- `write(buf)`
+
+### `shake.rest()`
+
+Returns a duplex binary pull-stream. After the handshake is complete, this can be plugged into whatever inner application or encryption stream you're using.
 
 ## License
 
